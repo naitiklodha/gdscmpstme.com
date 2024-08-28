@@ -1,6 +1,6 @@
 ---
 import Heading from '../components/team/Heading';
-import Team from '../components/team/Team';
+import TeamSection from '../components/team/Team';
 import TeamButtons from '../components/team/TeamButtons';
 import Layout from '../layouts/Layout.astro';
 
@@ -38,7 +38,7 @@ teamMembers.sort((a, b) => {
   <main class="relative flex-1 overflow-x-hidden">
     <Heading client:load />
     <TeamButtons client:load />
-    <Team teamMembers={teamMembers} client:load />
+    <TeamSection teamMembers={teamMembers} client:load />
 
     <!-- decor -->
     <img
