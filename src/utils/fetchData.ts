@@ -1,181 +1,465 @@
-// @ts-nocheck
-
-const { API_BASE_URL, API_KEY } = import.meta.env;
-import { GraphQLClient } from 'graphql-request';
-import {
-  Get2023MembersQuery,
-  Get2022MembersQuery,
-  GetLatestEventQuery,
-  GetEventsQuery,
-  GetEventQuery,
-  GetAchievementsQuery,
-  GetProjectsQuery,
-  Get2024MembersQuery,
-} from './queries';
-
-const client = new GraphQLClient(`${API_BASE_URL}/graphql`, {
-  headers: {
-    Authorization: `bearer ${API_KEY}`,
+const dummyTeamMembers = [
+  {
+    id: 1,
+    name: 'Aanchal Shah',
+    designation: 'Head (UI/UX)',
+    department: 'UI/UX',
+    imgUrl: 'https://example.com/aanchal.jpg',
   },
-});
+  {
+    id: 2,
+    name: 'Aditya Sharma',
+    designation: 'Head (Web Dev)',
+    department: 'Web Development',
+    imgUrl: 'https://example.com/aditya.jpg',
+  },
+  {
+    id: 3,
+    name: 'Anisha Mhatre',
+    designation: 'Head (Public Relations)',
+    department: 'Public Relations',
+    imgUrl: 'https://example.com/anisha.jpg',
+  },
+  {
+    id: 4,
+    name: 'Arnav Singh',
+    designation: 'Head (Robotics & IOT)',
+    department: 'Robotics & IOT',
+    imgUrl: 'https://example.com/arnav.jpg',
+  },
+  {
+    id: 5,
+    name: 'Aryaman Mavani',
+    designation: 'Head (Photography)',
+    department: 'Photography',
+    imgUrl: 'https://example.com/aryaman.jpg',
+  },
+  {
+    id: 6,
+    name: 'Ashmit Jain',
+    designation: 'Head (UI/UX)',
+    department: 'UI/UX',
+    imgUrl: 'https://example.com/ashmit.jpg',
+  },
+  {
+    id: 7,
+    name: 'Dhruv Gandhi',
+    designation: 'Head (Event Operations)',
+    department: 'Event Operations',
+    imgUrl: 'https://example.com/dhruv.jpg',
+  },
+  {
+    id: 8,
+    name: 'Disha Sejpal',
+    designation: 'Head (Event Operations)',
+    department: 'Event Operations',
+    imgUrl: 'https://example.com/disha.jpg',
+  },
+  {
+    id: 9,
+    name: 'Jugaad Chhabra',
+    designation: 'Head (Game Dev)',
+    department: 'Game Development',
+    imgUrl: 'https://example.com/jugaad.jpg',
+  },
+  {
+    id: 10,
+    name: 'Lakshit Sachdeva',
+    designation: 'Head (SMCW)',
+    department: 'SMCW',
+    imgUrl: 'https://example.com/lakshit.jpg',
+  },
+  {
+    id: 11,
+    name: 'Likhit Desai',
+    designation: 'Head (Inhouse Creatives)',
+    department: 'Inhouse Creatives',
+    imgUrl: 'https://example.com/likhit.jpg',
+  },
+  {
+    id: 12,
+    name: 'Manan Gandhi',
+    designation: 'Head (App Dev)',
+    department: 'App Development',
+    imgUrl: 'https://example.com/manan.jpg',
+  },
+  {
+    id: 13,
+    name: 'Mit Shah',
+    designation: 'Head (Public Relations)',
+    department: 'Public Relations',
+    imgUrl: 'https://example.com/mit.jpg',
+  },
+  {
+    id: 14,
+    name: 'Moitreyee Bhattacharjee',
+    designation: 'Head (Digital Creatives)',
+    department: 'Digital Creatives',
+    imgUrl: 'https://example.com/moitreyee.jpg',
+  },
+  {
+    id: 15,
+    name: 'Naman Chhaparia',
+    designation: 'Head (AI/ML)',
+    department: 'AI/ML',
+    imgUrl: 'https://example.com/naman.jpg',
+  },
+  {
+    id: 16,
+    name: 'Nishchay Jain',
+    designation: 'Head (Photography)',
+    department: 'Photography',
+    imgUrl: 'https://example.com/nishchay.jpg',
+  },
+  {
+    id: 17,
+    name: 'Vyom Shah',
+    designation: 'Head (Business Development)',
+    department: 'Business Development',
+    imgUrl: 'https://example.com/vyom.jpg',
+  },
+  {
+    id: 18,
+    name: 'Aaditya Kumar',
+    designation: 'Sub Head (Event Operations)',
+    department: 'Event Operations',
+    imgUrl: 'https://example.com/aaditya.jpg',
+  },
+  {
+    id: 19,
+    name: 'Aaryan Shah',
+    designation: 'Sub Head (Photography)',
+    department: 'Photography',
+    imgUrl: 'https://example.com/aaryan.jpg',
+  },
+  {
+    id: 20,
+    name: 'Aditya Negi',
+    designation: 'Sub Head (App Dev)',
+    department: 'App Development',
+    imgUrl: 'https://example.com/aditya_negi.jpg',
+  },
+  {
+    id: 21,
+    name: 'Anshika Gupta',
+    designation: 'Sub Head (Public Relations)',
+    department: 'Public Relations',
+    imgUrl: 'https://example.com/anshika.jpg',
+  },
+  {
+    id: 22,
+    name: 'Arya Chawan',
+    designation: 'Sub Head (Web Dev)',
+    department: 'Web Development',
+    imgUrl: 'https://example.com/arya.jpg',
+  },
+  {
+    id: 23,
+    name: 'Arya Shah',
+    designation: 'Sub Head (Robotics & IOT)',
+    department: 'Robotics & IOT',
+    imgUrl: 'https://example.com/arya_shah.jpg',
+  },
+  {
+    id: 24,
+    name: 'Avani Bhat',
+    designation: 'Sub Head (Robotics & IOT)',
+    department: 'Robotics & IOT',
+    imgUrl: 'https://example.com/avani.jpg',
+  },
+  {
+    id: 25,
+    name: 'Bevin Johnson',
+    designation: 'Sub Head (Web Dev)',
+    department: 'Web Development',
+    imgUrl: 'https://example.com/bevin.jpg',
+  },
+  {
+    id: 26,
+    name: 'Dev Poriya',
+    designation: 'Sub Head (SMCW)',
+    department: 'SMCW',
+    imgUrl: 'https://example.com/dev.jpg',
+  },
+  {
+    id: 27,
+    name: 'DHARMYA SHAH',
+    designation: 'Sub Head (Inhouse Creatives)',
+    department: 'Inhouse Creatives',
+    imgUrl: 'https://example.com/dharmya.jpg',
+  },
+  {
+    id: 28,
+    name: 'Dhruv Jain',
+    designation: 'Sub Head (AI/ML)',
+    department: 'AI/ML',
+    imgUrl: 'https://example.com/dhruv.jpg',
+  },
+  {
+    id: 29,
+    name: 'Harshhil Varma',
+    designation: 'Sub Head (Business Development)',
+    department: 'Business Development',
+    imgUrl: 'https://example.com/harshhil.jpg',
+  },
+  {
+    id: 30,
+    name: 'Mishitha',
+    designation: 'Sub Head (Public Relations)',
+    department: 'Public Relations',
+    imgUrl: 'https://example.com/mishitha.jpg',
+  },
+  {
+    id: 31,
+    name: 'Neerav Reddy',
+    designation: 'Sub Head (SMCW)',
+    department: 'SMCW',
+    imgUrl: 'https://example.com/neerav.jpg',
+  },
+  {
+    id: 32,
+    name: 'Parth Kotak',
+    designation: 'Sub Head (Business Development)',
+    department: 'Business Development',
+    imgUrl: 'https://example.com/parth.jpg',
+  },
+  {
+    id: 33,
+    name: 'Preet Shah',
+    designation: 'Sub Head (Event Operations)',
+    department: 'Event Operations',
+    imgUrl: 'https://example.com/preet.jpg',
+  },
+  {
+    id: 34,
+    name: 'Samarth Roy Chowdhury',
+    designation: 'Sub Head (Game Dev)',
+    department: 'Game Development',
+    imgUrl: 'https://example.com/samarth.jpg',
+  },
+  {
+    id: 35,
+    name: 'Samira Deepak',
+    designation: 'Sub Head (AI/ML)',
+    department: 'AI/ML',
+    imgUrl: 'https://example.com/samira.jpg',
+  },
+  {
+    id: 36,
+    name: 'SHRAVANI SHINDE',
+    designation: 'Sub Head (Business Development)',
+    department: 'Business Development',
+    imgUrl: 'https://example.com/shravani.jpg',
+  },
+  {
+    id: 37,
+    name: 'Shrey Shah',
+    designation: 'Sub Head (Robotics & IOT)',
+    department: 'Robotics & IOT',
+    imgUrl: 'https://example.com/shrey.jpg',
+  },
+  {
+    id: 38,
+    name: 'Sia Nair',
+    designation: 'Sub Head (Photography)',
+    department: 'Photography',
+    imgUrl: 'https://example.com/sia.jpg',
+  },
+  {
+    id: 39,
+    name: 'Sukhada Gulhane',
+    designation: 'Sub Head (UI/UX)',
+    department: 'UI/UX',
+    imgUrl: 'https://example.com/sukhada.jpg',
+  },
+  {
+    id: 40,
+    name: 'Tanay Kumar',
+    designation: 'Sub Head (Digital Creatives)',
+    department: 'Digital Creatives',
+    imgUrl: 'https://example.com/tanay.jpg',
+  },
+  {
+    id: 41,
+    name: 'Tia Gala',
+    designation: 'Sub Head (Digital Creatives)',
+    department: 'Digital Creatives',
+    imgUrl: 'https://example.com/tia.jpg',
+  },
+  {
+    id: 42,
+    name: 'Yukta Varma',
+    designation: 'Sub Head (App Dev)',
+    department: 'App Development',
+    imgUrl: 'https://example.com/yukta.jpg',
+  },
+];
 
-async function get2024TeamMembers(): Promise<Member[]> {
-  const { members } = await client.request(Get2024MembersQuery);
+const dummyAchievements = [
+  {
+    name: 'Hack N Code 6.0',
+    description: 'Secured 2nd and 3rd place in the 18-hour hackathon',
+    date: '2024-04-05',
+    imgUrl: 'https://example.com/hackncode.jpg',
+    contributors: [
+      { name: 'Siddh Purohit', link: 'https://linkedin.com/in/siddh' },
+      { name: 'Manan Gandhi', link: 'https://linkedin.com/in/manan' },
+      { name: 'Palash', link: '#' },
+    ],
+  },
+  {
+    name: 'GDSC Solution Challenge',
+    description: 'Global top 100 participants',
+    date: '2024-03-28',
+    imgUrl: 'https://example.com/solutionchallenge.jpg',
+    contributors: [
+      { name: 'Priyanshi Furiya', link: 'https://linkedin.com/in/priyanshi' },
+      { name: 'Abhishek Nair', link: 'https://linkedin.com/in/abhishek' },
+    ],
+  },
+  {
+    name: 'Hyphen Ideathon',
+    description: 'Secured a top 10 distinction',
+    date: '2024-02-28',
+    imgUrl: 'https://example.com/hyphen.jpg',
+    contributors: [
+      { name: 'Ashmit Jain', link: '#' },
+      { name: 'Sukhada Gulhane', link: '#' },
+      { name: 'Neerav Reddy', link: '#' },
+      { name: 'Bhushan Chavan', link: '#' },
+      { name: 'Hemil Shah', link: '#' },
+    ],
+  },
+  {
+    name: 'Polarizer',
+    description:
+      "Top spot in the college's official innovative project competition",
+    date: '2024-02-23',
+    imgUrl: 'https://example.com/polarizer.jpg',
+    contributors: [{ name: 'Harsh Maru', link: '#' }],
+  },
+  {
+    name: 'Quantiphi CodeQraft',
+    description: 'Won the Quantiphi CodeQraft hackathon',
+    date: '2024-02-08',
+    imgUrl: 'https://example.com/codeqraft.jpg',
+    contributors: [{ name: 'Jugaad Chhabra', link: '#' }],
+  },
+  {
+    name: 'CodeChella',
+    description: '2nd place in CodeChella coding competition',
+    date: '2023-12-16',
+    imgUrl: 'https://example.com/codechella.jpg',
+    contributors: [{ name: 'Vyom Shah', link: '#' }],
+  },
+  {
+    name: 'Tark Debate-a-thon',
+    description: '2nd place in Tark Debate-a-thon',
+    date: '2021-12-04',
+    imgUrl: 'https://example.com/tark.jpg',
+    contributors: [],
+  },
+  {
+    name: 'Amrita InCTF 21',
+    description: '44th in India, Top 5 in Maharashtra',
+    date: '2021-11-30',
+    imgUrl: 'https://example.com/inctf.jpg',
+    contributors: [],
+  },
+  {
+    name: 'Taqneeq Cyber Cypher Advanced Level',
+    description: '2nd place in the Advanced Level',
+    date: '2021-11-28',
+    imgUrl: 'https://example.com/cybercypher.jpg',
+    contributors: [],
+  },
+  {
+    name: 'IIT Mumbai TechFest Datathon',
+    description: 'Top Rank 11th, Private Leaderboard rank 22nd',
+    date: '2021-11-27',
+    imgUrl: 'https://example.com/techfest.jpg',
+    contributors: [],
+  },
+  {
+    name: 'KJSCE Crackathon',
+    description: 'Notable performance in KJSCE Crackathon',
+    date: '2021-10-09',
+    imgUrl: 'https://example.com/crackathon.jpg',
+    contributors: [],
+  },
+  {
+    name: 'ACM SemiColon',
+    description: '2nd, 3rd, and 4th place',
+    date: '2021-10-09',
+    imgUrl: 'https://example.com/semicolon.jpg',
+    contributors: [
+      { name: 'Angad', link: '#' },
+      { name: 'Abhinav', link: '#' },
+      { name: 'Aditi', link: '#' },
+    ],
+  },
+];
 
-  return members.data.map(member => ({
-    id: member.id,
-    name: member.attributes.name,
-    designation: member.attributes.designation,
-    department: member.attributes.department,
-    imgUrl:
-      member.attributes.image.data.attributes.formats?.medium?.url ??
-      member.attributes.image.data.attributes.url,
-  }));
+const dummyProjects = [
+  {
+    name: 'Project Mirage',
+    description:
+      'A web app created by GDSC MPSTME developers without direct communication, sparking creativity and surprises.',
+    imgUrl: 'https://example.com/mirage.jpg',
+    link: '#',
+    contributors: [],
+  },
+  {
+    name: 'MPSTME OnTrack',
+    description:
+      'Helps students find classrooms without wandering aimlessly through corridors.',
+    imgUrl: 'https://example.com/ontrack.jpg',
+    link: '#',
+    contributors: [],
+  },
+  {
+    name: 'AI Summit Website',
+    description:
+      'Official website for AI Summit, providing event details and registrations.',
+    imgUrl: 'https://example.com/aisummit.jpg',
+    link: '#',
+    contributors: [],
+  },
+  {
+    name: 'CodeWars Competition Platform',
+    description:
+      'An online competitive coding platform where the first to solve a problem wins the round.',
+    imgUrl: 'https://example.com/codewars.jpg',
+    link: '#',
+    contributors: [],
+  },
+  {
+    name: 'CodeWars Promotional Website',
+    description:
+      'A Star Wars-themed promotional website to drive CodeWars registrations.',
+    imgUrl: 'https://example.com/codewarspromo.jpg',
+    link: '#',
+    contributors: [],
+  },
+  {
+    name: 'GDSC MPSTME Official Website',
+    description: 'The official website of GDSC MPSTME, Mumbai.',
+    imgUrl: 'https://example.com/gdscwebsite.jpg',
+    link: '#',
+    contributors: [],
+  },
+];
+
+async function getTeamMembers() {
+  return dummyTeamMembers;
 }
 
-async function get2023TeamMembers(): Promise<Member[]> {
-  const { members } = await client.request(Get2023MembersQuery);
-
-  return members.data.map(member => ({
-    id: member.id,
-    name: member.attributes.name,
-    designation: member.attributes.designation,
-    department: member.attributes.department,
-    imgUrl:
-      member.attributes.image.data.attributes.formats?.medium?.url ??
-      member.attributes.image.data.attributes.url,
-  }));
+async function getAchievements() {
+  return dummyAchievements;
 }
 
-async function get2022TeamMembers(): Promise<Member[]> {
-  const { members } = await client.request(Get2022MembersQuery);
-
-  return members.data.map(member => ({
-    id: member.id,
-    name: member.attributes.name,
-    designation: member.attributes.designation,
-    department: member.attributes.department,
-    imgUrl:
-      member.attributes.image.data.attributes.formats?.medium?.url ??
-      member.attributes.image.data.attributes.url,
-  }));
+async function getProjects() {
+  return dummyProjects;
 }
 
-async function getLatestEvent(): Promise<EventBasic> {
-  const { events } = await client.request(GetLatestEventQuery);
-  const latestEvent = events.data[0].attributes;
-
-  return {
-    name: latestEvent.name,
-    summary: latestEvent.summary,
-    theme: latestEvent.theme,
-    slug: latestEvent.slug,
-    registrationLink: latestEvent.registration_link,
-    startDate: new Date(latestEvent.start),
-    endDate: new Date(latestEvent.end),
-    imgUrl: latestEvent.image.data.attributes.url,
-  };
-}
-
-async function getEvents(): Promise<EventWithTags[]> {
-  const { events } = await client.request(GetEventsQuery);
-  return events.data.map(event => {
-    const tags = event.attributes.event_tags.data.map(
-      tag => tag.attributes.tag,
-    );
-
-    return {
-      name: event.attributes.name,
-      summary: event.attributes.summary,
-      theme: event.attributes.theme,
-      slug: event.attributes.slug,
-      tags,
-      registrationLink: event.attributes.registration_link,
-      startDate: new Date(event.attributes.start),
-      endDate: new Date(event.attributes.end),
-      imgUrl: event.attributes.image.data.attributes.url,
-    };
-  });
-}
-
-async function getEvent(slug: string): Promise<EventDetailed> {
-  const { events } = await client.request(GetEventQuery, { slug });
-  const event = events.data[0].attributes;
-
-  return {
-    name: event.name,
-    summary: event.summary,
-    description: event.description,
-    theme: event.theme,
-    tags: event.event_tags.data.map(tag => tag.attributes.tag),
-    slug: event.slug,
-    registrationLink: event.registration_link,
-    devfolioSlug: event.devfolio_slug,
-    imgUrl: event.image.data.attributes.url,
-    location: event.location,
-    startDate: new Date(event.start),
-    endDate: new Date(event.end),
-    speakers: event.speakers.data.map(speaker => ({
-      name: speaker.attributes.name,
-      designation: speaker.attributes.designation,
-      bio: speaker.attributes.bio,
-      imgUrl: speaker.attributes.image.data.attributes.url,
-      website: speaker.attributes.website,
-      youtubeLink: speaker.attributes.youtube_link,
-      wikipediaLink: speaker.attributes.wikipedia_link,
-      twitterLink: speaker.attributes.twitter_link,
-      instagramLink: speaker.attributes.instagram_link,
-      githubLink: speaker.attributes.github_link,
-      linkedinLink: speaker.attributes.linkedin_link,
-      blogLink: speaker.attributes.blog_link,
-      googleScholarLink: speaker.attributes.google_scholar_link,
-    })),
-    sponsors: event.sponsors.data.map(sponsor => ({
-      name: sponsor.attributes.name,
-      link: sponsor.attributes.link,
-      tier: sponsor.attributes.tier,
-      imgUrl: sponsor.attributes.image.data.attributes.url,
-    })),
-  };
-}
-
-async function getAchievements(): Promise<Achievement[]> {
-  const { achievements } = await client.request(GetAchievementsQuery);
-
-  return achievements.data.map(achievement => ({
-    name: achievement.attributes.name,
-    description: achievement.attributes.description,
-    date: new Date(achievement.attributes.date),
-    imgUrl: achievement.attributes.image.data.attributes.url,
-    contributors: achievement.attributes.contributors.data.map(contributor => ({
-      name: contributor.attributes.name,
-      link: contributor.attributes.profile_link,
-    })),
-  }));
-}
-
-async function getProjects(): Promise<Project[]> {
-  const { projects } = await client.request(GetProjectsQuery);
-
-  return projects.data.map(project => ({
-    name: project.attributes.name,
-    description: project.attributes.description,
-    imgUrl: project.attributes.image.data.attributes.url,
-    link: project.attributes.link,
-    contributors: project.attributes.contributors.data.map(contributor => ({
-      name: contributor.attributes.name,
-      link: contributor.attributes.profile_link,
-    })),
-  }));
-}
-
-export {
-  get2023TeamMembers,
-  get2022TeamMembers,
-  getLatestEvent,
-  getEvents,
-  getEvent,
-  getAchievements,
-  getProjects,
-  get2024TeamMembers as getTeamMembers,
-};
+export { getTeamMembers, getAchievements, getProjects };
